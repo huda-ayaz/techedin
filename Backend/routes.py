@@ -98,7 +98,7 @@ def get_user_by_id():
         return jsonify({"error": "User not found"}), 404
 
 
-@app.route('/user/username/<username>', methods=['GET'])
+@app.route('/user/username, methods=['GET'])
 def get_user_by_username(username):
     if not username:
         return jsonify({"error": "Username is required"}), 400
@@ -109,6 +109,56 @@ def get_user_by_username(username):
     else:
         return jsonify({"error": "User not found"}), 404
 
+
+@app.route('/user_profile/<int:user_id>', methods=['GET'])
+def get_user_profile(user_id):
+    # Fetch user data
+    user = supabase.table('users').select('*').eq('id', user_id).execute()
+    
+    if not user.data:
+        return jsonify({"error": "User not found"}), 404
+    
+    user_data = user.data[0]
+    
+    # Fetch user's projects
+    projects = supabase.table('projects').select('*').eq('project_owner_id', user_id).execute()
+    
+    # Fetch user's interested projects
+    interested_projects = supabase.table('interestedprojects')\
+        .select('projects(*)')\
+        .eq('user_id', user_id)\
+        .execute()
+    
+    # Fetch user's accepted projects
+    accepted_projects = supabase.table('acceptedprojects')\
+        .select('projects(*)')\
+        .eq('user_id', user_id)\
+        .execute()
+    
+    # Fetch user's rejected projects
+    rejected_projects = supabase.table('rejectedprojects')\
+        .select('projects(*)')\
+        .eq('user_id', user_id)\
+        .execute()
+    
+    # Fetch user's notifications
+    notifications = supabase.table('notifications')\
+        .select('*')\
+        .eq('user_id', user_id)\
+        .order('time_stamp', desc=True)\
+        .execute()
+    
+    # Combine all data
+    profile_data = {
+        "user": user_data,
+        "owned_projects": projects.data,
+        "interested_projects": [item['projects'] for item in interested_projects.data],
+        "accepted_projects": [item['projects'] for item in accepted_projects.data],
+        "rejected_projects": [item['projects'] for item in rejected_projects.data],
+        "notifications": notifications.data
+    }
+    
+    return jsonify(profile_data)
 
 if __name__ == '__main__':
     app.run(debug=True)
