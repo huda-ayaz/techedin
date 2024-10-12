@@ -71,7 +71,7 @@ def notifications():
         response = supabase.table('notifications').insert(data).execute()
         return jsonify(response.data)
 
-@app.route('/user/<int:user_id>', methods=['GET'])
+@app.route('/user/<user_id>', methods=['GET'])
 def get_user(user_id):
     response = supabase.table('users').select('*').eq('id', user_id).execute()
     if response.data:
@@ -97,7 +97,7 @@ def get_user_by_id():
     else:
         return jsonify({"error": "User not found"}), 404
 
-@app.route('/user_profile/<int:user_id>', methods=['GET'])
+@app.route('/user_profile/<user_id>', methods=['GET'])
 def get_user_profile(user_id):
     # Fetch user data
     user = supabase.table('users').select('*').eq('id', user_id).execute()
