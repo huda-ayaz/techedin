@@ -1,17 +1,14 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom"; // Import useLocation
 import logo from "../assets/techedin-full-logo.png";
-import { Button } from '@mantine/core';
-
+import { Button, Group } from '@mantine/core';
 import { useState } from "react";
-import { Group, Code } from "@mantine/core";
 import {
   IconHome,
   IconBellRinging,
   IconLayoutKanban,
   IconUserCircle,
 } from "@tabler/icons-react";
-// import { MantineLogo } from "@mantinex/mantine-logo";
 import classes from "../css/NavbarSimple.module.css";
 
 const data = [
@@ -22,17 +19,15 @@ const data = [
 ];
 
 export default function Navbar() {
-  const [active, setActive] = useState("Home");
+  const location = useLocation(); 
+  const activeLink = data.find(item => item.link === location.pathname)?.label || "Home"; 
 
   const links = data.map((item) => (
     <Link
       className={classes.link}
-      data-active={item.label === active || undefined}
+      data-active={item.label === activeLink || undefined}
       to={item.link}
       key={item.label}
-      onClick={(event) => {
-        setActive(item.label);
-      }}
     >
       <item.icon className={classes.linkIcon} stroke={1.5} />
       <span className="font-bold">{item.label}</span>
