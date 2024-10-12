@@ -10,9 +10,14 @@ import {
   Divider,
 } from "@mantine/core";
 import { IconBrandGithub, IconEdit } from "@tabler/icons-react";
+import { useUser } from "../../UserContext";
 
 const UserInfo = ({ isOwnProfile }) => {
   const interests = ["React", "JavaScript", "Node.js", "CSS", "GitHub"]; // Example interests
+  const { user } = useUser();
+  if (!user) {
+    return <div>Loading user information...</div>;
+  }
 
   return (
     <Stack
@@ -41,15 +46,15 @@ const UserInfo = ({ isOwnProfile }) => {
         <Stack spacing="xs" style={{ flex: 1 }}>
           <Group spacing="sm">
             <Avatar color="cyan" radius="100%" size="lg">
-              JD
+              {`${user.firstName[0]}${user.lastName[0]}`}
             </Avatar>
             <div>
               <Flex align="center">
                 <Title order={2} className="text-[#333]">
-                  John Doe
+                  {`${user.firstName} ${user.lastName}`}
                 </Title>
                 <Anchor
-                  href="https://github.com/"
+                  href={`https://github.com/${user.githubUsername}`}
                   target="_blank"
                   style={{ marginLeft: "8px" }}
                 >
@@ -57,13 +62,13 @@ const UserInfo = ({ isOwnProfile }) => {
                 </Anchor>
               </Flex>
               <Text color="#555" size="sm">
-                Brooklyn College
+                {user.college}
               </Text>
             </div>
           </Group>
           <Divider my="sm" />
           <Text color="#333" size="sm">
-            <strong>Interests:</strong> {interests.join(", ")}
+            <strong>Interests:</strong> {user.inputtedInterests.join(", ")}
           </Text>
         </Stack>
 

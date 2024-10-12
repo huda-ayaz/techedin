@@ -14,9 +14,13 @@ import {
 } from "@mantine/core";
 import { IconThumbUp } from "@tabler/icons-react";
 import { notifications } from "@mantine/notifications";
+import { useUser } from "../UserContext";
+import { useNavigate } from "react-router-dom";
 
 export default function ProjectCard() {
   const [interested, setInterested] = useState(false);
+  const { user } = useUser();
+  const navigate = useNavigate();
 
   const handleInterestedClick = () => {
     setInterested(true);
@@ -26,7 +30,9 @@ export default function ProjectCard() {
       color: "#2ac808",
     });
   };
-
+  if (!user) {
+    return <div>Loading user information...</div>;
+  }
   return (
     <div>
       <Paper
@@ -39,18 +45,18 @@ export default function ProjectCard() {
       >
         <Group align="center" className="mb-2">
           <Avatar
-            component="a"
             src="https://images.unsplash.com/photo-1556740737-768f5f9f9e79" // replace with user.photo from context
-            href="profile" // replace with user.profile from context
-            target="_blank"
             alt="Profile picture"
+            style={{ cursor: "pointer" }}
+            onClick={() => navigate("/profile")}
           />
           <Flex direction="column" gap={0}>
             <Text size="md" fw="bolder" color="#2ac808">
-              John Doe • 1 hr ago
+              {`${user.firstName} ${
+                user.lastName
+              } • ${user.timeCreated.toLocaleString()}`}
             </Text>{" "}
-            <Text size="sm">Harvard University</Text>{" "}
-            {/* replace with user.name and college from context */}
+            <Text size="sm">{user.college}</Text>{" "}
           </Flex>
         </Group>
         <Stack>

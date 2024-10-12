@@ -84,7 +84,6 @@ const NotificationPage = () => {
           color="#2ac808"
         >
           <Group spacing="sm">
-            {/* Avatar Section */}
             <Avatar
               src={sender?.avatar}
               alt={sender?.name}
@@ -93,7 +92,6 @@ const NotificationPage = () => {
               size="lg"
             />
 
-            {/* Content Section with Flexbox */}
             <div style={{ flex: 1, display: "flex", flexDirection: "column" }}>
               <div style={{ flex: 1 }}>
                 <NotificationMessage notification={notification} />
