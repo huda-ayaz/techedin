@@ -19,8 +19,8 @@ const data = [
 ];
 
 export default function Navbar() {
-  const location = useLocation(); 
-  const activeLink = data.find(item => item.link === location.pathname)?.label || "Home"; 
+  const location = useLocation();
+  const activeLink = data.find(item => item.link === location.pathname)?.label || "Home";
 
   const links = data.map((item) => (
     <Link
