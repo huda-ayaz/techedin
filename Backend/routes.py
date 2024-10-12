@@ -97,19 +97,6 @@ def get_user_by_id():
     else:
         return jsonify({"error": "User not found"}), 404
 
-
-@app.route('/user/username, methods=['GET'])
-def get_user_by_username(username):
-    if not username:
-        return jsonify({"error": "Username is required"}), 400
-
-    response = supabase.table('users').select('*').eq('username', username).execute()
-    if response.data:
-        return jsonify(response.data[0])
-    else:
-        return jsonify({"error": "User not found"}), 404
-
-
 @app.route('/user_profile/<int:user_id>', methods=['GET'])
 def get_user_profile(user_id):
     # Fetch user data
