@@ -4,6 +4,7 @@ import Home from "./pages/Home";
 import { Routes, Route, useNavigate } from "react-router-dom";
 import { MantineProvider } from "@mantine/core";
 import Layout from "./Layout";
+import Projects from "./pages/Projects";
 import { Notifications, notifications } from "@mantine/notifications";
 import NotificationPage from "./pages/NotificationPage";
 import { useEffect } from "react";
@@ -41,6 +42,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/profile" element={<Profile />} />
+            <Route path="/projects" element={<Projects />} />
             <Route path="/notifications" element={<NotificationPage />} />
           </Routes>
         </Layout>

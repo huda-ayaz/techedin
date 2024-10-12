@@ -122,7 +122,7 @@ const NotificationPage = () => {
 
   return (
     <div className="p-6">
-      <Title>Notifications</Title>
+      <Title className="text-[#b8b8b8]">Notifications</Title>
       {renderNotifications()}
     </div>
   );

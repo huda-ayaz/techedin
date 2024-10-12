@@ -6,6 +6,7 @@ import {
   Card,
   Group,
   Image,
+  Flex,
   Text,
   Title,
   Paper,
@@ -28,7 +29,14 @@ export default function ProjectCard() {
 
   return (
     <div>
-      <Paper className="w-full" shadow="sm" p="xl" direction="column">
+      <Paper
+        className="w-full"
+        shadow="sm"
+        p="xl"
+        direction="column"
+        mt="sm"
+        overflow="auto"
+      >
         <Group align="center" className="mb-2">
           <Avatar
             component="a"
@@ -37,11 +45,18 @@ export default function ProjectCard() {
             target="_blank"
             alt="Profile picture"
           />
-          <Text size="sm">John Doe • 1 hr ago</Text>{" "}
-          {/* replace with user.name from context */}
+          <Flex direction="column" gap={0}>
+            <Text size="md" fw="bolder" color="#2ac808">
+              John Doe • 1 hr ago
+            </Text>{" "}
+            <Text size="sm">Harvard University</Text>{" "}
+            {/* replace with user.name and college from context */}
+          </Flex>
         </Group>
         <Stack>
-          <Title order={2}>Project Title</Title>
+          <Title order={2} className="text-[#2ac808]">
+            Project Title
+          </Title>
           <div>
             <Text>
               Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ullam
@@ -54,7 +69,8 @@ export default function ProjectCard() {
         </Stack>
         <Group align="center" mt="10">
           <Title order={6}>Tags: </Title>
-          <Badge>React</Badge> {/* replace with project.tags from context */}
+          <Badge color="#2ac808">React</Badge>{" "}
+          {/* replace with project.tags from context */}
         </Group>
         <Card justify="center" shadow="xl" className="border-2 mt-2" p="sm">
           <Group spacing="md">
@@ -77,7 +93,7 @@ export default function ProjectCard() {
               {/* replace with project.description from GitHub */}
               <Button
                 variant="light"
-                color="blue"
+                color="#2ac808"
                 fullWidth
                 mt="md"
                 component="a"
@@ -92,7 +108,7 @@ export default function ProjectCard() {
         <Group mt="sm">
           <Button
             variant="light"
-            color="blue"
+            color="#2ac808"
             onClick={handleInterestedClick}
             disabled={interested}
           >

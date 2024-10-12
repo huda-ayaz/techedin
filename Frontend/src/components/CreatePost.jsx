@@ -2,11 +2,12 @@ import React from "react";
 import {
   Flex,
   Avatar,
+  Button,
+  Paper,
+  Stack,
   TextInput,
   Textarea,
   MultiSelect,
-  Button,
-  Stack,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 
@@ -19,7 +20,7 @@ const CreatePost = () => {
       url: "",
     },
     validate: {
-      project: (value) => (value ? null : "Project name is required"),
+      project: (value) => (value ? null : "Project title is required"),
       description: (value) =>
         value ? null : "Project description is required",
       categories: (value) =>
@@ -39,39 +40,77 @@ const CreatePost = () => {
   };
 
   return (
-    <form onSubmit={form.onSubmit(handleSubmit)}>
-      <Flex justify="flex-start" gap="30px">
+    <Paper p="lg" radius="none">
+      <Flex justify="flex-start" gap="30px" align="center">
         <Avatar color="cyan" radius="100%" size="lg">
           JD
         </Avatar>
-        <Stack gap="xs" className="w-full">
+        <Stack className="w-full">
           <TextInput
-            placeholder="Project name"
+            placeholder="Enter project title"
             {...form.getInputProps("project")}
+            styles={{
+              input: {
+                fontSize: "1.5em",
+                border: "none",
+                borderBottom: "1px solid #ccc",
+                borderRadius: 0,
+                padding: "0.5em 0",
+              },
+            }}
           />
-          <Textarea
-            placeholder="Project Description"
-            {...form.getInputProps("description")}
-          />
-          <MultiSelect
-            placeholder="Pick Categories"
-            data={["React", "Angular", "Vue", "Svelte"]}
-            {...form.getInputProps("categories")}
-          />
-          <TextInput placeholder="Project URL" {...form.getInputProps("url")} />
-          <Flex justify="flex-end" mt="md">
-            <Button
-              type="submit"
-              radius="xl"
-              color="teal"
-              style={{ borderRadius: "50px", width: "150px" }}
-            >
-              Send
-            </Button>
-          </Flex>
         </Stack>
       </Flex>
-    </form>
+      <Stack mt="md" spacing="xs">
+        <Textarea
+          placeholder="Share an idea to find your dream team..."
+          {...form.getInputProps("description")}
+          styles={{
+            input: {
+              border: "none",
+              borderBottom: "1px solid #ccc",
+              borderRadius: 0,
+              padding: "0.5em 0",
+            },
+          }}
+        />
+        <MultiSelect
+          placeholder="Tag relevant categories"
+          data={["React", "Angular", "Vue", "Svelte"]}
+          {...form.getInputProps("categories")}
+          styles={{
+            input: {
+              border: "none",
+              borderBottom: "1px solid #ccc",
+              borderRadius: 0,
+              padding: "0.5em 0",
+            },
+          }}
+        />
+        <TextInput
+          placeholder="Project URL"
+          {...form.getInputProps("url")}
+          styles={{
+            input: {
+              border: "none",
+              borderBottom: "1px solid #ccc",
+              borderRadius: 0,
+              padding: "0.5em 0",
+            },
+          }}
+        />
+      </Stack>
+      <Flex justify="flex-end" mt="md">
+        <Button
+          type="submit"
+          radius="xl"
+          color="#2ac808"
+          onClick={form.onSubmit(handleSubmit)}
+        >
+          Share
+        </Button>
+      </Flex>
+    </Paper>
   );
 };
 
