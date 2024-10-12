@@ -2,4 +2,4 @@ supabase
 python-dotenv
 flask
 flask-cors
-
+flask-socketio
