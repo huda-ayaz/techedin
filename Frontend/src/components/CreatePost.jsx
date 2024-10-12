@@ -10,8 +10,10 @@ import {
   MultiSelect,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
+import { useUser } from "../UserContext";
 
 const CreatePost = () => {
+  const { user } = useUser();
   const form = useForm({
     initialValues: {
       project: "",
@@ -38,12 +40,14 @@ const CreatePost = () => {
   const handleSubmit = (values) => {
     console.log("Submitted Data:", values);
   };
-
+  if (!user) {
+    return <div>Loading user information...</div>;
+  }
   return (
     <Paper p="lg" radius="none">
       <Flex justify="flex-start" gap="30px" align="center">
         <Avatar color="cyan" radius="100%" size="lg">
-          JD
+          {`${user.firstName[0]}${user.lastName[0]}`}
         </Avatar>
         <Stack className="w-full">
           <TextInput
