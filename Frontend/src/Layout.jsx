@@ -5,13 +5,13 @@ import RightSidebar from "./components/RightSidebar";
 const Layout = ({ children }) => {
   return (
     <div className="flex w-full h-screen">
-      <div className="w-1/5 bg-gray-100">
+      <div className="w-1/5 bg-[#1e2734]">
         <Navbar />
       </div>
 
-      <div className="flex-grow p-6">{children}</div>
+      <div className="flex-grow p-6 bg-[#121b28]">{children}</div>
 
-      <div className="w-1/5 bg-gray-100">
+      <div className="w-1/5 bg-[#1e2734]">
         <RightSidebar />
       </div>
     </div>
