@@ -23,6 +23,7 @@ export default function ProjectCard() {
     notifications.show({
       title: "Thank you for expressing interest!",
       message: "The project owner should reach back on your request soon.",
+      color: "#2ac808",
     });
   };
 
