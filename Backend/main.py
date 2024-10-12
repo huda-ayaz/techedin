@@ -6,12 +6,12 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Get database credentials from environment variables
-SUPABASE_URL = os.environ.get('SUPABASE_URL')
-SUPABASE_KEY = os.environ.get('SUPABASE_KEY')
+SUPABASE_URL = os.getenv('SUPABASE_URL')
+SUPABASE_KEY = os.getenv('SUPABASE_KEY')
 
 # Check if credentials are available
 if not SUPABASE_URL or not SUPABASE_KEY:
-    raise ValueError("Database credentials are missing. Please check your .env file.")
+    raise ValueError("Database credentials are missing. Please check your environment variables.")
 
 # Create Supabase client
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
