@@ -1,13 +1,13 @@
 import "./App.css";
-// import Navbar from "./components/Navbar";
 import Profile from "./pages/Profile";
+import Home from "./pages/Home";
 import { Routes, Route } from "react-router-dom";
 import { MantineProvider } from "@mantine/core";
 import Layout from "./Layout";
-import "@mantine/core/styles.css";
-import "@mantine/notifications/styles.css";
 import { Notifications } from "@mantine/notifications";
 import NotificationPage from "./pages/NotificationPage";
+import "@mantine/notifications/styles.css";
+import "@mantine/core/styles.css";
 
 function App() {
   return (
@@ -16,7 +16,7 @@ function App() {
         <Notifications />
         <Layout>
           <Routes>
-            {/* <Route path="/" element={<Home />} /> */}
+            <Route path="/" element={<Home />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/notifications" element={<NotificationPage />} />
           </Routes>
