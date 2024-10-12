@@ -13,3 +13,4 @@ export default {
 		return new Response('Hello World!');
 	},
 };
+console.log("hello world");
