@@ -1,8 +1,9 @@
 #:schema node_modules/wrangler/config-schema.json
 name = "rag-ai-tutorial"
-main = "src/index.js"
+main = "src/worker.js"
 compatibility_date = "2024-10-11"
 compatibility_flags = ["nodejs_compat"]
+account_id = "c164eb93f021ab6b0a3c63f536992489"
 
 # Workers Logs
 # Docs: https://developers.cloudflare.com/workers/observability/logs/workers-logs/
@@ -24,6 +25,8 @@ enabled = true
 # - https://developers.cloudflare.com/workers/configuration/secrets/
 # [vars]
 # MY_VARIABLE = "production_value"
+# CLOUDFLARE_API_KEY = "GG2ogrd0W8p99q9a2-OpNg7-8HNN8I9R62sAvb-8"
+# CLOUDFLARE_ACCOUNT = "c164eb93f021ab6b0a3c63f536992489"
 
 # Bind the Workers AI model catalog. Run machine learning models, powered by serverless GPUs, on Cloudflare’s global network
 # Docs: https://developers.cloudflare.com/workers/wrangler/configuration/#workers-ai
