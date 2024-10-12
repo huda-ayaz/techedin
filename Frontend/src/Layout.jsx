@@ -9,7 +9,7 @@ const Layout = ({ children }) => {
         <Navbar />
       </div>
 
-      <div className="flex-grow p-6 bg-[#121b28]">{children}</div>
+      <div className="p-6 w-3/5 bg-[#121b28]">{children}</div>
 
       <div className="w-1/5 bg-[#1e2734]">
         <RightSidebar />
