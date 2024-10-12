@@ -1,20 +1,24 @@
 import os
 from supabase import create_client, Client
 from dotenv import load_dotenv
+from flask import Flask  # Add this import
 
 # Load environment variables
 load_dotenv()
 
 # Get database credentials from environment variables
-SUPABASE_URL = os.environ.get('SUPABASE_URL')
-SUPABASE_KEY = os.environ.get('SUPABASE_KEY')
+SUPABASE_URL = os.getenv('SUPABASE_URL')
+SUPABASE_KEY = os.getenv('SUPABASE_KEY')
 
 # Check if credentials are available
 if not SUPABASE_URL or not SUPABASE_KEY:
-    raise ValueError("Database credentials are missing. Please check your .env file.")
+    raise ValueError("Database credentials are missing. Please check your environment variables.")
 
 # Create Supabase client
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
+
+# Create Flask app
+app = Flask(__name__)
 
 def get_user_info():
     try:
@@ -84,3 +88,8 @@ if __name__ == "__main__":
             print(f"   Project Owner ID: {project['project_owner_id']}")
     else:
         print("No interested projects retrieved or an error occurred.")
+
+
+    # Run the Flask app
+    app.run(host='0.0.0.0', port=8080, debug=True)
+

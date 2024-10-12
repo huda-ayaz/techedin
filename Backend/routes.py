@@ -15,7 +15,12 @@ app = Flask(__name__)
 socketio = SocketIO(app)
 
 
-@app.route("/users", methods=["GET", "POST"])
+
+@app.route("/",methods=["GET","POST"])
+def hello():
+    return jsonify("Hello World")
+
+@app.route('/users', methods=['GET', 'POST'])
 def users():
     if request.method == "GET":
         response = supabase.table("users").select("*").execute()
@@ -82,7 +87,7 @@ def notifications():
         return jsonify(response.data)
 
 
-@app.route("/user/<int:user_id>", methods=["GET"])
+@app.route('/user/<user_id>', methods=['GET'])
 def get_user(user_id):
     response = supabase.table("users").select("*").eq("id", user_id).execute()
     if response.data:
@@ -109,7 +114,7 @@ def get_user_by_id():
         return jsonify({"error": "User not found"}), 404
 
 
-@app.route("/user_profile/<int:user_id>", methods=["GET"])
+@app.route('/user_profile/<user_id>', methods=['GET'])
 def get_user_profile(user_id):
     # Fetch user data
     user = supabase.table("users").select("*").eq("id", user_id).execute()
@@ -187,4 +192,4 @@ def handle_notification(data):
 
 
 if __name__ == "__main__":
-    socketio.run(app, debug=True)
+    socketio.run(app, host='0.0.0.0', port=8080, debug=True)

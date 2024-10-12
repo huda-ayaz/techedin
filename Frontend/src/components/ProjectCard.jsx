@@ -6,6 +6,7 @@ import {
   Card,
   Group,
   Image,
+  Flex,
   Text,
   Title,
   Paper,
@@ -13,9 +14,13 @@ import {
 } from "@mantine/core";
 import { IconThumbUp } from "@tabler/icons-react";
 import { notifications } from "@mantine/notifications";
+import { useUser } from "../UserContext";
+import { useNavigate } from "react-router-dom";
 
 export default function ProjectCard() {
   const [interested, setInterested] = useState(false);
+  const { user } = useUser();
+  const navigate = useNavigate();
 
   const handleInterestedClick = () => {
     setInterested(true);
@@ -25,23 +30,39 @@ export default function ProjectCard() {
       color: "#2ac808",
     });
   };
-
+  if (!user) {
+    return <div>Loading user information...</div>;
+  }
   return (
     <div>
-      <Paper className="w-full" shadow="sm" p="xl" direction="column">
+      <Paper
+        className="w-full"
+        shadow="sm"
+        p="xl"
+        direction="column"
+        mt="sm"
+        overflow="auto"
+      >
         <Group align="center" className="mb-2">
           <Avatar
-            component="a"
             src="https://images.unsplash.com/photo-1556740737-768f5f9f9e79" // replace with user.photo from context
-            href="profile" // replace with user.profile from context
-            target="_blank"
             alt="Profile picture"
+            style={{ cursor: "pointer" }}
+            onClick={() => navigate("/profile")}
           />
-          <Text size="sm">John Doe • 1 hr ago</Text>{" "}
-          {/* replace with user.name from context */}
+          <Flex direction="column" gap={0}>
+            <Text size="md" fw="bolder" color="#2ac808">
+              {`${user.firstName} ${
+                user.lastName
+              } • ${user.timeCreated.toLocaleString()}`}
+            </Text>{" "}
+            <Text size="sm">{user.college}</Text>{" "}
+          </Flex>
         </Group>
         <Stack>
-          <Title order={2}>Project Title</Title>
+          <Title order={2} className="text-[#2ac808]">
+            Project Title
+          </Title>
           <div>
             <Text>
               Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ullam
@@ -54,7 +75,8 @@ export default function ProjectCard() {
         </Stack>
         <Group align="center" mt="10">
           <Title order={6}>Tags: </Title>
-          <Badge>React</Badge> {/* replace with project.tags from context */}
+          <Badge color="#2ac808">React</Badge>{" "}
+          {/* replace with project.tags from context */}
         </Group>
         <Card justify="center" shadow="xl" className="border-2 mt-2" p="sm">
           <Group spacing="md">
@@ -77,7 +99,7 @@ export default function ProjectCard() {
               {/* replace with project.description from GitHub */}
               <Button
                 variant="light"
-                color="blue"
+                color="#2ac808"
                 fullWidth
                 mt="md"
                 component="a"
@@ -92,7 +114,7 @@ export default function ProjectCard() {
         <Group mt="sm">
           <Button
             variant="light"
-            color="blue"
+            color="#2ac808"
             onClick={handleInterestedClick}
             disabled={interested}
           >
