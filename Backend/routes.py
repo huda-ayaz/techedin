@@ -11,6 +11,10 @@ SUPABASE_KEY = os.getenv('SUPABASE_KEY')
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 app = Flask(__name__)
 
+@app.route("/",methods=["GET","POST"])
+def hello():
+    return jsonify("Hello World")
+
 @app.route('/users', methods=['GET', 'POST'])
 def users():
     if request.method == 'GET':
@@ -148,4 +152,4 @@ def get_user_profile(user_id):
     return jsonify(profile_data)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=8080, debug=True)

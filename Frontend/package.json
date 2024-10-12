@@ -11,12 +11,17 @@
   },
   "dependencies": {
     "@mantine/core": "^7.13.2",
+    "@mantine/form": "^7.13.2",
     "@mantine/hooks": "^7.13.2",
     "@mantine/notifications": "^7.13.2",
+    "@nivo/pie": "^0.87.0",
+    "@octokit/core": "^6.1.2",
     "@tabler/icons-react": "^3.19.0",
+    "axios": "^1.7.7",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "react-router-dom": "^6.27.0"
+    "react-router-dom": "^6.27.0",
+    "socket.io-client": "^4.8.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.11.1",
