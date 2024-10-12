@@ -1,21 +1,23 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
 import "./App.css";
-import { Routes, Route } from "react-router-dom";
-import Navbar from "./components/Navbar";
+// import Navbar from "./components/Navbar";
 import Profile from "./pages/Profile";
+import { Routes, Route } from "react-router-dom";
+import { MantineProvider } from "@mantine/core";
+import "@mantine/core/styles.css";
+import Layout from "./Layout";
 
 function App() {
-  const [count, setCount] = useState(0);
-
   return (
-    <>
-      <Routes>
-        <Route path="/" element={<Navbar />} />
-        <Route path="/profile" element={<Profile />} />
-      </Routes>
-    </>
+    <div>
+      <MantineProvider>
+        <Layout>
+          <Routes>
+            {/* <Route path="/" element={<Home />} /> */}
+            <Route path="/profile" element={<Profile />} />
+          </Routes>
+        </Layout>
+      </MantineProvider>
+    </div>
   );
 }
 
