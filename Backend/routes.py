@@ -1,6 +1,7 @@
 import os
 from flask import Flask, request, jsonify
 from flask_socketio import SocketIO, emit
+from flask_cors import CORS  # Import CORS
 from supabase import create_client, Client
 from dotenv import load_dotenv
 
@@ -12,7 +13,8 @@ SUPABASE_KEY = os.getenv("SUPABASE_KEY")
 
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 app = Flask(__name__)
-socketio = SocketIO(app)
+CORS(app)  # Enable CORS for all routes
+socketio = SocketIO(app, cors_allowed_origins="*")  # Allow all origins for SocketIO
 
 
 
