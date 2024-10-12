@@ -1,8 +1,18 @@
-## remove the container if it exists
+#!/bin/bash
+
+echo "Removing existing container and image..."
+# Remove the container if it exists
 docker rm -f match-maker
-## remove the image if it exists
+
+# Remove the image if it exists
 docker rmi -f match-maker
-## build the image
+
+echo "Building new image..."
+# Build the image
 docker build -t match-maker .
-# run the container
+
+echo "Running new container..."
+# Run the container
 docker run -d -p 8080:8080 --name match-maker match-maker
+
+echo "Container rebuilt and restarted."
