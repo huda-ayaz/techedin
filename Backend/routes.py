@@ -1,10 +1,8 @@
 import os
 from flask import Flask, request, jsonify
-from flask_socketio import SocketIO, emit
-from flask_cors import CORS  # Import CORS
+from flask_cors import CORS
 from supabase import create_client, Client
 from dotenv import load_dotenv
-
 
 load_dotenv()  # take environment variables from .env.
 
@@ -14,9 +12,6 @@ SUPABASE_KEY = os.getenv("SUPABASE_KEY")
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
-socketio = SocketIO(app, cors_allowed_origins="*")  # Allow all origins for SocketIO
-
-
 
 @app.route("/",methods=["GET","POST"])
 def hello():
@@ -32,7 +27,6 @@ def users():
         response = supabase.table("users").insert(data).execute()
         return jsonify(response.data)
 
-
 @app.route("/projects", methods=["GET", "POST"])
 def projects():
     if request.method == "GET":
@@ -42,7 +36,6 @@ def projects():
         data = request.json
         response = supabase.table("projects").insert(data).execute()
         return jsonify(response.data)
-
 
 @app.route("/interested_projects", methods=["GET", "POST"])
 def interested_projects():
@@ -54,7 +47,6 @@ def interested_projects():
         response = supabase.table("interestedprojects").insert(data).execute()
         return jsonify(response.data)
 
-
 @app.route("/accepted_projects", methods=["GET", "POST"])
 def accepted_projects():
     if request.method == "GET":
@@ -64,7 +56,6 @@ def accepted_projects():
         data = request.json
         response = supabase.table("acceptedprojects").insert(data).execute()
         return jsonify(response.data)
-
 
 @app.route("/rejected_projects", methods=["GET", "POST"])
 def rejected_projects():
@@ -76,7 +67,6 @@ def rejected_projects():
         response = supabase.table("rejectedprojects").insert(data).execute()
         return jsonify(response.data)
 
-
 @app.route("/notifications", methods=["GET", "POST"])
 def notifications():
     if request.method == "GET":
@@ -85,9 +75,7 @@ def notifications():
     elif request.method == "POST":
         data = request.json
         response = supabase.table("notifications").insert(data).execute()
-        socketio.emit("notifications", response.data[0])
         return jsonify(response.data)
-
 
 @app.route('/user/<user_id>', methods=['GET'])
 def get_user(user_id):
@@ -96,7 +84,6 @@ def get_user(user_id):
         return jsonify(response.data[0])
     else:
         return jsonify({"error": "User not found"}), 404
-
 
 @app.route("/user", methods=["GET"])
 def get_user_by_id():
@@ -114,7 +101,6 @@ def get_user_by_id():
         return jsonify(response.data[0])
     else:
         return jsonify({"error": "User not found"}), 404
-
 
 @app.route('/user_profile/<user_id>', methods=['GET'])
 def get_user_profile(user_id):
@@ -176,27 +162,5 @@ def get_user_profile(user_id):
 
     return jsonify(profile_data)
 
-
-@socketio.on("connect")
-def handle_connect():
-    print("Client connected")
-    emit("message", "Connected to Flask server")
-
-
-@socketio.on("disconnect")
-def handle_disconnect():
-    print("Client disconnected")
-
-
-@socketio.on("notifications")
-def handle_notification(data):
-    print(f"WebSocket sent a new modification: {data}")
-
-
 if __name__ == "__main__":
-    import os
-    if os.environ.get('FLASK_ENV') == 'development':
-        socketio.run(app, host='0.0.0.0', port=8080, debug=True, allow_unsafe_werkzeug=True)
-    else:
-        # In production, we'll use gunicorn to run the app
-        app.run(host='0.0.0.0', port=8080)
+    app.run(host='0.0.0.0', port=8080)
