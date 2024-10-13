@@ -29,11 +29,11 @@ const CreatePost = () => {
       categories: (value) =>
         value.length > 0 ? null : "Please select at least one category",
       url: (value) =>
-        /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([/\w \.-]*)*\/?$/.test(
+        /^(https?:\/\/)?(www\.)?(github\.com|gitlab\.com)\/[a-zA-Z0-9_.-]+\/[a-zA-Z0-9_.-]+$/.test(
           value
         )
           ? null
-          : "Invalid URL",
+          : "Invalid GitHub Project URL",
     },
   });
 
@@ -109,7 +109,7 @@ const CreatePost = () => {
           }}
         />
         <TextInput
-          placeholder="Project URL"
+          placeholder="GitHub Project URL"
           {...form.getInputProps("url")}
           styles={{
             input: {

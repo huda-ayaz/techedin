@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { UserInfo, ProjectStats } from "../components/profile";
 import { Divider, Title } from "@mantine/core";
 import CreatePost from "../components/CreatePost";
@@ -9,7 +9,7 @@ export default function Profile() {
     <div>
       <UserInfo isOwnProfile={true} />
       {/* <ProjectStats />  USE ONLY FOR DEMO*/}
-      <div className="p-6">
+      <div className="">
         <Title className="text-[#b8b8b8]" p="xs">
           My Projects
         </Title>
