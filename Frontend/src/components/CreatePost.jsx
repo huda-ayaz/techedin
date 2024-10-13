@@ -11,6 +11,7 @@ import {
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useUser } from "../UserContext";
+import axios from "axios";
 
 const CreatePost = () => {
   const { user } = useUser();
@@ -28,7 +29,6 @@ const CreatePost = () => {
       categories: (value) =>
         value.length > 0 ? null : "Please select at least one category",
       url: (value) =>
-        value === "" ||
         /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([/\w \.-]*)*\/?$/.test(
           value
         )
@@ -37,8 +37,25 @@ const CreatePost = () => {
     },
   });
 
-  const handleSubmit = (values) => {
-    console.log("Submitted Data:", values);
+  const handleSubmit = async (values) => {
+    const projectData = {
+      project_owner_id: user.id,
+      project_title: values.project,
+      project_description: values.description,
+      project_link: values.url,
+      project_categories: values.categories,
+      time_posted: new Date().toISOString(),
+    };
+    try {
+      const response = await axios.post(
+        "https://techedin-production.up.railway.app/projects",
+        projectData
+      );
+      console.log(response.data);
+      form.reset();
+    } catch (error) {
+      console.log(error);
+    }
   };
   if (!user) {
     return <div>Loading user information...</div>;
@@ -47,7 +64,7 @@ const CreatePost = () => {
     <Paper p="lg" radius="xl">
       <Flex justify="flex-start" gap="30px" align="center">
         <Avatar color="cyan" radius="100%" size="lg">
-          {`${user.firstName[0]}${user.lastName[0]}`}
+          {`${user.first_name[0]}${user.last_name[0]}`}
         </Avatar>
         <Stack className="w-full">
           <TextInput
