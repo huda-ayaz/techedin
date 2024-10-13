@@ -12,6 +12,7 @@ import { io } from "socket.io-client";
 import NotificationMessage from "./components/notifications/NotificationMessage";
 import "@mantine/notifications/styles.css";
 import "@mantine/core/styles.css";
+import Footer from "./components/Footer";
 
 function App() {
   const navigate = useNavigate();
@@ -46,6 +47,7 @@ function App() {
             <Route path="/notifications" element={<NotificationPage />} />
           </Routes>
         </Layout>
+        <Footer />
       </MantineProvider>
     </div>
   );
