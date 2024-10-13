@@ -12,6 +12,8 @@ import { useNavigate } from "react-router-dom";
 import AcceptRejectButtons from "../components/notifications/AcceptRejectButtons";
 import SendEmailButton from "../components/notifications/SendEmailButton";
 import NotificationMessage from "../components/notifications/NotificationMessage";
+import axios from "axios";
+import { useUser } from "../UserContext";
 
 const DummyUsers = [
   {
@@ -65,7 +67,16 @@ const NotificationPage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchNotifications = async () => {};
+    const fetchNotifications = async () => {
+      try {
+        const response = await axios.get(
+          "https://techedin-production.up.railway.app/notifications"
+        );
+        console.log("Notifications: ", response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
 
     fetchNotifications();
   }, []);
@@ -85,12 +96,14 @@ const NotificationPage = () => {
         >
           <Group spacing="sm">
             <Avatar
-              src={sender?.avatar}
               alt={sender?.name}
               onClick={() => navigate("/profiles")}
               style={{ cursor: "pointer" }}
               size="lg"
-            />
+              color="teal"
+            >
+              {sender?.name[0]}
+            </Avatar>
 
             <div style={{ flex: 1, display: "flex", flexDirection: "column" }}>
               <div style={{ flex: 1 }}>

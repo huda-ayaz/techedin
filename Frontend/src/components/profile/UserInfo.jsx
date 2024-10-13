@@ -46,15 +46,15 @@ const UserInfo = ({ isOwnProfile }) => {
         <Stack spacing="xs" style={{ flex: 1 }}>
           <Group spacing="sm">
             <Avatar color="cyan" radius="100%" size="lg">
-              {`${user.firstName[0]}${user.lastName[0]}`}
+              {`${user.first_name[0]}${user.last_name[0]}`}
             </Avatar>
             <div>
               <Flex align="center">
                 <Title order={2} className="text-[#333]">
-                  {`${user.firstName} ${user.lastName}`}
+                  {`${user.first_name} ${user.last_name}`}
                 </Title>
                 <Anchor
-                  href={`https://github.com/${user.githubUsername}`}
+                  href={`https://github.com/${user.github_username}`}
                   target="_blank"
                   style={{ marginLeft: "8px" }}
                 >
@@ -68,7 +68,7 @@ const UserInfo = ({ isOwnProfile }) => {
           </Group>
           <Divider my="sm" />
           <Text color="#333" size="sm">
-            <strong>Interests:</strong> {user.inputtedInterests.join(", ")}
+            <strong>Interests:</strong> {user.inputted_interests.join(", ")}
           </Text>
         </Stack>
 
