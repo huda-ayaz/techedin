@@ -3,3 +3,10 @@ python-dotenv
 flask
 flask-cors
 flask-socketio
+flask
+flask-socketio
+supabase
+python-dotenv
+flask-cors
+gunicorn
+eventlet
