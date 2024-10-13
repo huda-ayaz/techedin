@@ -42,6 +42,7 @@ export default function ProjectCard() {
         direction="column"
         mt="sm"
         overflow="auto"
+        radius="md"
       >
         <Group align="center" className="mb-2">
           <Avatar
