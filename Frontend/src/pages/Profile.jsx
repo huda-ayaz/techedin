@@ -9,7 +9,7 @@ export default function Profile() {
     <div>
       <UserInfo isOwnProfile={true} />
       {/* <ProjectStats />  USE ONLY FOR DEMO*/}
-      <div className="">
+      <div className="p-6">
         <Title className="text-[#b8b8b8]" p="xs">
           My Projects
         </Title>

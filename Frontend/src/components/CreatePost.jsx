@@ -44,7 +44,7 @@ const CreatePost = () => {
     return <div>Loading user information...</div>;
   }
   return (
-    <Paper p="lg" radius="xl" className="m-6">
+    <Paper p="lg" radius="xl">
       <Flex justify="flex-start" gap="30px" align="center">
         <Avatar color="cyan" radius="100%" size="lg">
           {`${user.firstName[0]}${user.lastName[0]}`}
