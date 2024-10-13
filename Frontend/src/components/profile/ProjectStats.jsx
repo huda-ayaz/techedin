@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Avatar, Flex, Title, Container } from "@mantine/core";
+import { Title, Container } from "@mantine/core";
 import { Octokit } from "@octokit/core";
 import axios from "axios";
 import { ResponsivePie } from "@nivo/pie";
@@ -62,9 +62,22 @@ const ProjectStats = () => {
   }, []);
 
   return (
-    <Container>
-      <Title order={2}>Project Stats</Title>
-      <div>
+    <Container p={0}>
+      <div
+        className="w-full"
+        style={{
+          borderRadius: "8px",
+          overflow: "hidden",
+          backgroundColor: "#f8f9fa",
+          boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
+          height: 380,
+          margin: "20px 0",
+          padding: "5px 10px 20px",
+        }}
+      >
+        <Title order={2} className="text-[#2ac808]">
+          GitHub Project Stats
+        </Title>
         <ResponsivePie
           data={languages}
           margin={{ top: 40, right: 80, bottom: 80, left: 80 }}
