@@ -7,12 +7,14 @@ from flask import Flask  # Add this import
 load_dotenv()
 
 # Get database credentials from environment variables
-SUPABASE_URL = os.getenv('SUPABASE_URL')
-SUPABASE_KEY = os.getenv('SUPABASE_KEY')
+SUPABASE_URL = os.getenv("SUPABASE_URL")
+SUPABASE_KEY = os.getenv("SUPABASE_KEY")
 
 # Check if credentials are available
 if not SUPABASE_URL or not SUPABASE_KEY:
-    raise ValueError("Database credentials are missing. Please check your environment variables.")
+    raise ValueError(
+        "Database credentials are missing. Please check your environment variables."
+    )
 
 # Create Supabase client
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
@@ -20,32 +22,47 @@ supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 # Create Flask app
 app = Flask(__name__)
 
+
 def get_user_info():
     try:
-        response = supabase.table('users').select('*').execute()
+        response = supabase.table("users").select("*").execute()
         print("Query executed successfully")
         return response.data
     except Exception as e:
         print(f"An error occurred: {e}")
         return None
-    
+
+
 def get_user_projects(user_id):
     """Fetch all projects posted by a specific user."""
     try:
-        projects = supabase.table('projects').select('*').eq('project_owner_id', user_id).execute()
+        projects = (
+            supabase.table("projects")
+            .select("*")
+            .eq("project_owner_id", user_id)
+            .execute()
+        )
         print("User projects retrieved successfully")
         return projects.data
     except Exception as e:
         print(f"An error occurred: {e}")
         return None
-    
+
+
 def get_interested_projects(user_id):
     """Fetch all projects a user is interested in."""
     try:
-        interested_projects = supabase.table('interestedprojects').select('project_id').eq('user_id', user_id).execute()
+        interested_projects = (
+            supabase.table("interestedprojects")
+            .select("project_id")
+            .eq("user_id", user_id)
+            .execute()
+        )
         if interested_projects.data:
-            project_ids = [proj['project_id'] for proj in interested_projects.data]
-            projects = supabase.table('projects').select('*').in_('id', project_ids).execute()
+            project_ids = [proj["project_id"] for proj in interested_projects.data]
+            projects = (
+                supabase.table("projects").select("*").in_("id", project_ids).execute()
+            )
             print("Interested projects retrieved successfully")
             return projects.data
         print("No interested projects found for user.")
@@ -53,9 +70,10 @@ def get_interested_projects(user_id):
     except Exception as e:
         print(f"An error occurred: {e}")
         return None
-    
+
+
 if __name__ == "__main__":
-    user_id = 2 # Set the user ID for fetching projects
+    user_id = 2  # Set the user ID for fetching projects
 
     # Fetch user info
     users = get_user_info()
@@ -71,7 +89,9 @@ if __name__ == "__main__":
     if user_projects:
         print(f"\nUser Projects for ID {user_id}:")
         for project in user_projects:
-            print(f" - {project['project_title']}: {project['project_description']} (Link: {project['project_link']})")
+            print(
+                f" - {project['project_title']}: {project['project_description']} (Link: {project['project_link']})"
+            )
     else:
         print("No user projects retrieved or an error occurred.")
 
@@ -89,7 +109,5 @@ if __name__ == "__main__":
     else:
         print("No interested projects retrieved or an error occurred.")
 
-    
     # Run the Flask app
-    app.run(host='0.0.0.0', port=8080, debug=True)
-
+    app.run(host="0.0.0.0", port=8080, debug=True)

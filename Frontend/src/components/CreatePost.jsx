@@ -39,7 +39,7 @@ const CreatePost = () => {
 
   const handleSubmit = async (values) => {
     const projectData = {
-      project_owner_id: user.id,
+      project_owner_id: user.user.id,
       project_title: values.project,
       project_description: values.description,
       project_link: values.url,
@@ -64,7 +64,7 @@ const CreatePost = () => {
     <Paper p="lg" radius="xl">
       <Flex justify="flex-start" gap="30px" align="center">
         <Avatar color="cyan" radius="100%" size="lg">
-          {`${user.first_name[0]}${user.last_name[0]}`}
+          {`${user.user.first_name[0]}${user.user.last_name[0]}`}
         </Avatar>
         <Stack className="w-full">
           <TextInput

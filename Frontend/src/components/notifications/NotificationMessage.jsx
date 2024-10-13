@@ -1,43 +1,51 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import axios from "axios";
 
-const DummyProjects = [
-  { id: 1, name: "Project Alpha", ownerId: 1 },
-  { id: 2, name: "Project Beta", ownerId: 2 },
-  { id: 3, name: "Project Gamma", ownerId: 3 },
-];
+const NotificationMessage = ({ notification, sender }) => {
+  const { project_id, type } = notification;
+  const [projectDetails, setProjectDetails] = useState(null);
+  const [fetchError, setFetchError] = useState(false);
 
-const DummyUsers = [
-  { id: 1, name: "Alice" },
-  { id: 2, name: "Bob" },
-  { id: 3, name: "Charlie" },
-];
+  useEffect(() => {
+    const fetchProjectDetails = async () => {
+      try {
+        const response = await axios.get(
+          `https://techedin-production.up.railway.app/project?id=${project_id}`
+        );
+        if (response.data) {
+          setProjectDetails(response.data);
+        } else {
+          setFetchError(true);
+        }
+      } catch (error) {
+        console.error("Error fetching project details:", error);
+        setFetchError(true);
+      }
+    };
 
-const getProjectDetails = (projectId) => {
-  const project = DummyProjects.find((proj) => proj.id === projectId);
-  if (project) {
-    const owner = DummyUsers.find((user) => user.id === project.ownerId);
-    return { projectName: project.name, owner };
+    if (project_id) {
+      fetchProjectDetails();
+    } else {
+      setFetchError(true);
+    }
+  }, [project_id]);
+
+  if (!projectDetails && !fetchError) {
+    return <div>Loading...</div>;
   }
-  return null;
-};
 
-const NotificationMessage = ({ notification }) => {
-  const { senderId, recipientId, projectId, messageType } = notification;
-  const sender = DummyUsers.find((user) => user.id === senderId);
-  const recipient = DummyUsers.find((user) => user.id === recipientId);
-  const projectDetails = getProjectDetails(projectId);
+  const projectTitle = projectDetails?.project_title || project_id;
+  const projectLink = project_id ? `/project/${project_id}` : "#";
 
-  if (!projectDetails) {
-    return null;
-  }
-
-  switch (messageType) {
+  switch (type.toLowerCase()) {
     case "interested":
       return (
         <div>
-          <Link to={`/user/${senderId}`}>{sender.name}</Link> is interested in{" "}
-          <Link to={`/project/${projectId}`}>{projectDetails.projectName}</Link>
+          <Link to={`/user/${sender?.id || "#"}`}>
+            {sender?.first_name || "User"}
+          </Link>{" "}
+          is interested in <Link to={projectLink}>Project: {projectTitle}</Link>
         </div>
       );
 
@@ -45,11 +53,11 @@ const NotificationMessage = ({ notification }) => {
       return (
         <div>
           Congrats! You are officially a team member of{" "}
-          <Link to={`/user/${projectDetails.owner.id}`}>
-            {projectDetails.owner.name}
+          <Link to={`/user/${projectDetails?.ownerId || "#"}`}>
+            {projectDetails?.owner_name || sender.first_name}
           </Link>
           {"'s "}
-          <Link to={`/project/${projectId}`}>{projectDetails.projectName}</Link>
+          <Link to={projectLink}>Project: {projectTitle}</Link>
         </div>
       );
 
@@ -57,8 +65,8 @@ const NotificationMessage = ({ notification }) => {
       return (
         <div>
           Unfortunately, your request for{" "}
-          <Link to={`/project/${projectId}`}>{projectDetails.projectName}</Link>{" "}
-          has been rejected.
+          <Link to={projectLink}>Project: {projectTitle}</Link> has been
+          rejected.
         </div>
       );
 
