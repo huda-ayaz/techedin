@@ -177,6 +177,24 @@ def get_user_profile(user_id):
     return jsonify(profile_data)
 
 
+@app.route("/project", methods=["GET"])
+def get_project_by_id():
+    project_id = request.args.get("id")
+    if not project_id:
+        return jsonify({"error": "Project ID is required"}), 400
+
+    try:
+        project_id = int(project_id)
+    except ValueError:
+        return jsonify({"error": "Invalid project ID"}), 400
+
+    response = supabase.table("projects").select("*").eq("id", project_id).execute()
+    if response.data:
+        return jsonify(response.data[0])
+    else:
+        return jsonify({"error": "Project not found"}), 404
+
+
 @socketio.on("connect")
 def handle_connect():
     print("Client connected")
