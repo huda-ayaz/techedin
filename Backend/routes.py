@@ -181,11 +181,6 @@ def get_project_by_id():
     if not project_id:
         return jsonify({"error": "Project ID is required"}), 400
 
-    try:
-        project_id = int(project_id)
-    except ValueError:
-        return jsonify({"error": "Invalid project ID"}), 400
-
     response = supabase.table("projects").select("*").eq("id", project_id).execute()
     if response.data:
         return jsonify(response.data[0])

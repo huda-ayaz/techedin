@@ -19,7 +19,9 @@ import { useUser } from "../UserContext";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-export default function ProjectCard({ project_id }) {
+export default function ProjectCard({
+  project_id = "ec56dbed-5858-48a9-905e-1b13cf912989",
+}) {
   const [interested, setInterested] = useState(false);
   const [project, setProject] = useState(null);
   const { user } = useUser();
