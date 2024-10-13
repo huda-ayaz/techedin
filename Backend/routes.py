@@ -17,12 +17,12 @@ CORS(app)  # Enable CORS for all routes
 socketio = SocketIO(app, cors_allowed_origins="*")  # Allow all origins for SocketIO
 
 
-
-@app.route("/",methods=["GET","POST"])
+@app.route("/", methods=["GET", "POST"])
 def hello():
     return jsonify("Hello World")
 
-@app.route('/users', methods=['GET', 'POST'])
+
+@app.route("/users", methods=["GET", "POST"])
 def users():
     if request.method == "GET":
         response = supabase.table("users").select("*").execute()
@@ -89,7 +89,7 @@ def notifications():
         return jsonify(response.data)
 
 
-@app.route('/user/<user_id>', methods=['GET'])
+@app.route("/user/<user_id>", methods=["GET"])
 def get_user(user_id):
     response = supabase.table("users").select("*").eq("id", user_id).execute()
     if response.data:
@@ -116,7 +116,7 @@ def get_user_by_id():
         return jsonify({"error": "User not found"}), 404
 
 
-@app.route('/user_profile/<user_id>', methods=['GET'])
+@app.route("/user_profile/<user_id>", methods=["GET"])
 def get_user_profile(user_id):
     # Fetch user data
     user = supabase.table("users").select("*").eq("id", user_id).execute()
@@ -132,34 +132,34 @@ def get_user_profile(user_id):
     )
 
     # Fetch user's interested projects
-    interested_projects = (
-        supabase.table("interestedprojects")
-        .select("projects(*)")
-        .eq("user_id", user_id)
-        .execute()
-    )
+    # interested_projects = (
+    #     supabase.table("interestedprojects")
+    #     .select("projects(*)")
+    #     .eq("user_id", user_id)
+    #     .execute()
+    # )
 
     # Fetch user's accepted projects
-    accepted_projects = (
-        supabase.table("acceptedprojects")
-        .select("projects(*)")
-        .eq("user_id", user_id)
-        .execute()
-    )
+    # accepted_projects = (
+    #     supabase.table("acceptedprojects")
+    #     .select("projects(*)")
+    #     .eq("user_id", user_id)
+    #     .execute()
+    # )
 
     # Fetch user's rejected projects
-    rejected_projects = (
-        supabase.table("rejectedprojects")
-        .select("projects(*)")
-        .eq("user_id", user_id)
-        .execute()
-    )
+    # rejected_projects = (
+    #     supabase.table("rejectedprojects")
+    #     .select("projects(*)")
+    #     .eq("user_id", user_id)
+    #     .execute()
+    # )
 
     # Fetch user's notifications
     notifications = (
         supabase.table("notifications")
         .select("*")
-        .eq("user_id", user_id)
+        .eq("recipient_id", user_id)
         .order("time_stamp", desc=True)
         .execute()
     )
@@ -168,9 +168,9 @@ def get_user_profile(user_id):
     profile_data = {
         "user": user_data,
         "owned_projects": projects.data,
-        "interested_projects": [item["projects"] for item in interested_projects.data],
-        "accepted_projects": [item["projects"] for item in accepted_projects.data],
-        "rejected_projects": [item["projects"] for item in rejected_projects.data],
+        # "interested_projects": [item["projects"] for item in interested_projects.data],
+        # "accepted_projects": [item["projects"] for item in accepted_projects.data],
+        # "rejected_projects": [item["projects"] for item in rejected_projects.data],
         "notifications": notifications.data,
     }
 
@@ -195,8 +195,11 @@ def handle_notification(data):
 
 if __name__ == "__main__":
     import os
-    if os.environ.get('FLASK_ENV') == 'development':
-        socketio.run(app, host='0.0.0.0', port=8080, debug=True, allow_unsafe_werkzeug=True)
+
+    if os.environ.get("FLASK_ENV") == "development":
+        socketio.run(
+            app, host="0.0.0.0", port=8080, debug=True, allow_unsafe_werkzeug=True
+        )
     else:
         # In production, we'll use gunicorn to run the app
-        app.run(host='0.0.0.0', port=8080)
+        app.run(host="0.0.0.0", port=8080)
