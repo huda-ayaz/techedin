@@ -9,7 +9,12 @@ const Layout = ({ children }) => {
         <Navbar />
       </div>
 
-      <div className="w-3/5 bg-[#121b28] overflow-auto">{children}</div>
+      <div
+        className="w-3/5 bg-[#121b28] overflow-auto"
+        style={{ height: "calc(100vh - 50px)" }}
+      >
+        {children}
+      </div>
 
       <div className="w-1/5 bg-[#1e2734]">
         <RightSidebar />

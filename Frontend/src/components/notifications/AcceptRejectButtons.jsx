@@ -1,11 +1,17 @@
-import React from "react";
+import React, { useState } from "react";
 import { IconCheck, IconXboxX } from "@tabler/icons-react";
 import { Button } from "@mantine/core";
 
 const AcceptRejectButtons = () => {
-  const handleReject = async () => {};
+  const [rejected, setRejected] = useState(false);
+  const [accepted, setAccepted] = useState(false);
+  const handleReject = async () => {
+    setRejected(true);
+  };
 
-  const handleAccept = async () => {};
+  const handleAccept = async () => {
+    setAccepted(true);
+  };
 
   return (
     <div className="w-full flex">
@@ -15,8 +21,10 @@ const AcceptRejectButtons = () => {
         onClick={handleAccept}
         color="teal"
         style={{ flex: 1, marginRight: "5px" }}
+        display={rejected ? "none" : ""}
+        disabled={accepted}
       >
-        Accept
+        {!accepted ? "Accept" : "Accepted"}
       </Button>
 
       <Button
@@ -25,8 +33,10 @@ const AcceptRejectButtons = () => {
         leftSection={<IconXboxX size={14} />}
         onClick={handleReject}
         style={{ flex: 1 }}
+        display={accepted ? "none" : ""}
+        disabled={rejected}
       >
-        Reject
+        {!rejected ? "Reject" : "Rejected"}
       </Button>
     </div>
   );

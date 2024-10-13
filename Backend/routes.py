@@ -1,27 +1,35 @@
 import os
 from flask import Flask, request, jsonify
 from flask_socketio import SocketIO, emit
-from flask_cors import CORS  # Import CORS
+from flask_cors import CORS
 from supabase import create_client, Client
 from dotenv import load_dotenv
 
+# Load environment variables from .env file
+load_dotenv()
 
-load_dotenv()  # take environment variables from .env.
-
+# Supabase credentials from .env
 SUPABASE_URL = os.getenv("SUPABASE_URL")
 SUPABASE_KEY = os.getenv("SUPABASE_KEY")
 
+# Initialize Supabase client
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
+
+# Initialize Flask app and enable CORS
 app = Flask(__name__)
-CORS(app)  # Enable CORS for all routes
-socketio = SocketIO(app, cors_allowed_origins="*")  # Allow all origins for SocketIO
+CORS(app)
+
+# Initialize Flask-SocketIO with async_mode set to eventlet for production compatibility
+socketio = SocketIO(app, cors_allowed_origins="*", async_mode="eventlet")
 
 
+# Basic test route
 @app.route("/", methods=["GET", "POST"])
 def hello():
     return jsonify("Hello World")
 
 
+# Route for handling user data
 @app.route("/users", methods=["GET", "POST"])
 def users():
     if request.method == "GET":
@@ -33,6 +41,7 @@ def users():
         return jsonify(response.data)
 
 
+# Route for handling projects data
 @app.route("/projects", methods=["GET", "POST"])
 def projects():
     if request.method == "GET":
@@ -44,6 +53,7 @@ def projects():
         return jsonify(response.data)
 
 
+# Route for handling interested projects
 @app.route("/interested_projects", methods=["GET", "POST"])
 def interested_projects():
     if request.method == "GET":
@@ -55,6 +65,7 @@ def interested_projects():
         return jsonify(response.data)
 
 
+# Route for handling accepted projects
 @app.route("/accepted_projects", methods=["GET", "POST"])
 def accepted_projects():
     if request.method == "GET":
@@ -66,6 +77,7 @@ def accepted_projects():
         return jsonify(response.data)
 
 
+# Route for handling rejected projects
 @app.route("/rejected_projects", methods=["GET", "POST"])
 def rejected_projects():
     if request.method == "GET":
@@ -77,6 +89,7 @@ def rejected_projects():
         return jsonify(response.data)
 
 
+# Route for handling notifications
 @app.route("/notifications", methods=["GET", "POST"])
 def notifications():
     if request.method == "GET":
@@ -85,10 +98,12 @@ def notifications():
     elif request.method == "POST":
         data = request.json
         response = supabase.table("notifications").insert(data).execute()
-        socketio.emit("notifications", response.data[0])
+        # Emit the notification event to all connected clients
+        socketio.emit("notifications", response.data[0], broadcast=True)
         return jsonify(response.data)
 
 
+# Route for fetching user by user ID
 @app.route("/user/<user_id>", methods=["GET"])
 def get_user(user_id):
     response = supabase.table("users").select("*").eq("id", user_id).execute()
@@ -98,29 +113,11 @@ def get_user(user_id):
         return jsonify({"error": "User not found"}), 404
 
 
-@app.route("/user", methods=["GET"])
-def get_user_by_id():
-    user_id = request.args.get("id")
-    if not user_id:
-        return jsonify({"error": "User ID is required"}), 400
-
-    try:
-        user_id = int(user_id)
-    except ValueError:
-        return jsonify({"error": "Invalid user ID"}), 400
-
-    response = supabase.table("users").select("*").eq("id", user_id).execute()
-    if response.data:
-        return jsonify(response.data[0])
-    else:
-        return jsonify({"error": "User not found"}), 404
-
-
+# Route for fetching user profile and associated data
 @app.route("/user_profile/<user_id>", methods=["GET"])
 def get_user_profile(user_id):
     # Fetch user data
     user = supabase.table("users").select("*").eq("id", user_id).execute()
-
     if not user.data:
         return jsonify({"error": "User not found"}), 404
 
@@ -177,6 +174,26 @@ def get_user_profile(user_id):
     return jsonify(profile_data)
 
 
+# Route for fetching a project by project ID
+@app.route("/project", methods=["GET"])
+def get_project_by_id():
+    project_id = request.args.get("id")
+    if not project_id:
+        return jsonify({"error": "Project ID is required"}), 400
+
+    try:
+        project_id = int(project_id)
+    except ValueError:
+        return jsonify({"error": "Invalid project ID"}), 400
+
+    response = supabase.table("projects").select("*").eq("id", project_id).execute()
+    if response.data:
+        return jsonify(response.data[0])
+    else:
+        return jsonify({"error": "Project not found"}), 404
+
+
+# SocketIO event handlers
 @socketio.on("connect")
 def handle_connect():
     print("Client connected")
@@ -193,13 +210,11 @@ def handle_notification(data):
     print(f"WebSocket sent a new modification: {data}")
 
 
+# Run the application
 if __name__ == "__main__":
-    import os
-
     if os.environ.get("FLASK_ENV") == "development":
         socketio.run(
             app, host="0.0.0.0", port=8080, debug=True, allow_unsafe_werkzeug=True
         )
     else:
-        # In production, we'll use gunicorn to run the app
-        app.run(host="0.0.0.0", port=8080)
+        socketio.run(app, host="0.0.0.0", port=8080)

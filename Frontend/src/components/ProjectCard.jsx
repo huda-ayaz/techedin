@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { v4 as uuidv4 } from "uuid";
 import {
   Avatar,
   Badge,
@@ -16,19 +17,44 @@ import { IconThumbUp } from "@tabler/icons-react";
 import { notifications } from "@mantine/notifications";
 import { useUser } from "../UserContext";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
-export default function ProjectCard() {
+export default function ProjectCard({ project_id }) {
   const [interested, setInterested] = useState(false);
+  const [project, setProject] = useState(null);
   const { user } = useUser();
   const navigate = useNavigate();
+  useEffect(() => {
+    const fetchProjectDetails = async () => {
+      try {
+        const response = await axios.get(
+          `https://techedin-production.up.railway.app/project?id=${project_id}`
+        );
+        setProject(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchProjectDetails();
+  }, [project_id]);
 
-  const handleInterestedClick = () => {
+  const handleInterestedClick = async () => {
     setInterested(true);
     notifications.show({
       title: "Thank you for expressing interest!",
       message: "The project owner should reach back on your request soon.",
       color: "#2ac808",
     });
+    const response = await axios.post(
+      "https://techedin-production.up.railway.app/notifications",
+      {
+        recipient_id: project.project_owner_id,
+        sender_id: user.id,
+        time_stamp: new Date().toISOString(),
+        project_id: project_id,
+        type: "Interested",
+      }
+    );
   };
   if (!user) {
     return <div>Loading user information...</div>;
@@ -53,9 +79,9 @@ export default function ProjectCard() {
           />
           <Flex direction="column" gap={0}>
             <Text size="md" fw="bolder" color="#2ac808">
-              {`${user.firstName} ${
-                user.lastName
-              } • ${user.timeCreated.toLocaleString()}`}
+              {`${user.first_name} ${user.last_name} • ${new Date(
+                user.time_created
+              ).toLocaleString()}`}
             </Text>{" "}
             <Text size="sm">{user.college}</Text>{" "}
           </Flex>
