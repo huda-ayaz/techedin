@@ -5,7 +5,8 @@ import axios from "axios";
 import { ResponsivePie } from "@nivo/pie";
 
 const ProjectStats = () => {
-  const [languages, setLanguages] = useState({});
+  // Initialize languages as an empty array
+  const [languages, setLanguages] = useState([]);
   const octokit = new Octokit({
     auth: import.meta.env.VITE_GITHUB_TOKEN,
   });
@@ -125,6 +126,7 @@ const ProjectStats = () => {
             },
           ]}
         />
+        ) }
       </div>
     </Container>
   );

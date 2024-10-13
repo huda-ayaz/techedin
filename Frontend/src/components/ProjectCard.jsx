@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { v4 as uuidv4 } from "uuid";
 import {
   Avatar,
   Badge,
@@ -19,26 +18,24 @@ import { useUser } from "../UserContext";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-export default function ProjectCard({
-  project_id = "ec56dbed-5858-48a9-905e-1b13cf912989",
-}) {
+export default function ProjectCard({ project, interestedBool = false }) {
   const [interested, setInterested] = useState(false);
-  const [project, setProject] = useState(null);
+  const [projectOwner, setProjectOwner] = useState();
   const { user } = useUser();
   const navigate = useNavigate();
   useEffect(() => {
     const fetchProjectDetails = async () => {
       try {
         const response = await axios.get(
-          `https://techedin-production.up.railway.app/project?id=${project_id}`
+          `https://techedin-production.up.railway.app/user/${project.project_owner_id}`
         );
-        setProject(response.data);
+        setProjectOwner(response.data);
       } catch (error) {
-        console.error(error);
+        console.error("Error fetching project owner details:", error);
       }
     };
     fetchProjectDetails();
-  }, [project_id]);
+  }, [project.project_owner_id]);
 
   const handleInterestedClick = async () => {
     setInterested(true);
@@ -51,12 +48,13 @@ export default function ProjectCard({
       "https://techedin-production.up.railway.app/notifications",
       {
         recipient_id: project.project_owner_id,
-        sender_id: user.id,
+        sender_id: user.user.id,
         time_stamp: new Date().toISOString(),
-        project_id: project_id,
-        type: "Interested",
+        project_id: project.id,
+        type: "interested",
       }
     );
+    console.log("Notification Created: ", response.data);
   };
   if (!user) {
     return <div>Loading user information...</div>;
@@ -74,37 +72,38 @@ export default function ProjectCard({
       >
         <Group align="center" className="mb-2">
           <Avatar
-            src="https://images.unsplash.com/photo-1556740737-768f5f9f9e79" // replace with user.photo from context
+            src="https://images.unsplash.com/photo-1556740737-768f5f9f9e79" // replace with user.user.photo from context
             alt="Profile picture"
             style={{ cursor: "pointer" }}
             onClick={() => navigate("/profile")}
           />
           <Flex direction="column" gap={0}>
             <Text size="md" fw="bolder" color="#2ac808">
-              {`${user.first_name} ${user.last_name} • ${new Date(
-                user.time_created
-              ).toLocaleString()}`}
+              {`${projectOwner?.first_name} ${
+                projectOwner?.last_name
+              } • ${new Date(project?.time_posted).toLocaleString()}`}
             </Text>{" "}
-            <Text size="sm">{user.college}</Text>{" "}
+            <Text size="sm">{user.user.college}</Text>{" "}
           </Flex>
         </Group>
         <Stack>
           <Title order={2} className="text-[#2ac808]">
-            Project Title
+            {project.project_title}
           </Title>
           <div>
-            <Text>
-              Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ullam
-              exercitationem inventore corporis, libero eius similique,
-              perspiciatis quos nihil officiis quis aut necessitatibus! Ipsam
-              minus culpa et deserunt odio sunt sed, eveniet ducimus quisquam
-              excepturi officia, assumenda earum consequuntur tempora odit.
-            </Text>
+            <Text>{project.project_description}</Text>
           </div>
         </Stack>
         <Group align="center" mt="10">
           <Title order={6}>Tags: </Title>
-          <Badge color="#2ac808">React</Badge>{" "}
+          {project.project_categories.map((category) => {
+            return (
+              <Badge color="#2ac808" key={category}>
+                {category}
+              </Badge>
+            );
+          })}
+
           {/* replace with project.tags from context */}
         </Group>
         <Card justify="center" shadow="xl" className="border-2 mt-2" p="sm">
@@ -123,7 +122,7 @@ export default function ProjectCard({
               </Text>{" "}
               {/* replace with project.name from GitHub */}
               <Text size="sm" color="dimmed">
-                A brief description of the GitHub project.
+                {project.project_description}
               </Text>{" "}
               {/* replace with project.description from GitHub */}
               <Button
@@ -132,7 +131,7 @@ export default function ProjectCard({
                 fullWidth
                 mt="md"
                 component="a"
-                href="https://github.com/user/repo"
+                href={project.project_link}
                 target="_blank"
               >
                 View on GitHub
@@ -140,19 +139,23 @@ export default function ProjectCard({
             </Stack>
           </Group>
         </Card>
-        <Group mt="sm">
-          <Button
-            variant="light"
-            color="#2ac808"
-            onClick={handleInterestedClick}
-            disabled={interested}
-          >
-            <IconThumbUp stroke={2} className="mr-2" />
-            {interested
-              ? "Pending approval from project owner."
-              : "I'm Interested"}
-          </Button>
-        </Group>
+        {interestedBool ? (
+          ""
+        ) : (
+          <Group mt="sm">
+            <Button
+              variant="light"
+              color="#2ac808"
+              onClick={handleInterestedClick}
+              disabled={interested || interestedBool}
+            >
+              <IconThumbUp stroke={2} className="mr-2" />
+              {interested || interestedBool
+                ? "Pending approval from project owner."
+                : "I'm Interested"}
+            </Button>
+          </Group>
+        )}
       </Paper>
     </div>
   );

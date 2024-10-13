@@ -4,12 +4,15 @@ import App from "./App.jsx";
 import "./index.css";
 import { BrowserRouter } from "react-router-dom";
 import { UserProvider } from "./UserContext.jsx";
+import { ProjectProvider } from "./ProjectContext.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <BrowserRouter>
       <UserProvider>
-        <App />
+        <ProjectProvider>
+          <App />
+        </ProjectProvider>
       </UserProvider>
     </BrowserRouter>
   </StrictMode>
